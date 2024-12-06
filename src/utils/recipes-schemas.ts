@@ -7,7 +7,9 @@ import { z } from 'zod'
 
 
 export const CategoriesAPIResponsableSchema = z.object  ({
-    drinks: z.array(z.object({
-        strCategory: z.string()
-    }))
+    drinks: z.array(
+        z.object({
+            strCategory: z.string()
+        })
+    )
 })

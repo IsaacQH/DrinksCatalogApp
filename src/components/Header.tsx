@@ -9,6 +9,9 @@ export default function Header() {
   const isHome = useMemo(() => pathname === '/', [pathname])  //checar que sea home Cada que pathname cambie actuaize o revise
 
   const fetchCategories = useAppStore((state) => state.fetchCategories)
+  const categories = useAppStore((state) => state.categories)
+
+  console.log(categories)
   
   useEffect( () => {
       fetchCategories()
@@ -66,7 +69,14 @@ export default function Header() {
                       id="category"
                       name="category"
                       className=" p-3 w-full rounded-lg focus:outline-none"
-                  > <option>-- Seleccione --</option></select>
+                  > <option>-- Seleccione --</option>
+                  {categories.drinks.map((category) => (
+                      <option
+                          value={category.strCategory}
+                          key={category.strCategory}
+                      >{category.strCategory}
+                      </option>))}
+                  </select>
                 </div>
 
                 <input type="submit" value="Buscar recetas" className=" cursor-pointer bg-slate-800 hover:bg-slate-900 text-white font-extrabold w-full p-2 rounded-lg uppercase"/>

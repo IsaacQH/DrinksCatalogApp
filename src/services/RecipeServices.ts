@@ -10,6 +10,8 @@ export async function getCategories() {
 
     const result = CategoriesAPIResponsableSchema.safeParse(data)  //Guarda el resultado ya con el tipado
 
-    console.log(result)
+    if (result.success){
+        return result.data  //Regresa directamente a drinks
+    }
     
 }

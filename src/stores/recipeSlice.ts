@@ -2,17 +2,20 @@
 
 import { StateCreator } from "zustand"
 import { getCategories } from "../services/RecipeServices"
-
-type Category = []
+import type { Categories } from "../types"
 
 export type RecipesSliceType = {
-    categories:Category[],
+    categories:Categories,
     fetchCategories: () => Promise<void>  //Promesa para obetner el objeto de la API
 }
 
-export const createRecipesSlice : StateCreator<RecipesSliceType> = () => ({
-    categories: [],
+export const createRecipesSlice : StateCreator<RecipesSliceType> = (set) => ({
+    categories: {
+        drinks:[]
+    },
     fetchCategories: async()=> {
-        getCategories()        //Llama a la API desde el servicio en getCategories
+        const categories = await getCategories()        //Llama a la API desde el servicio en getCategories
+        set({
+            categories})    //Setea el valor de la API o fetch en el state global
     }
 })
