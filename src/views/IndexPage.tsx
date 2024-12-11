@@ -14,14 +14,14 @@ export default function IndexPage() {
       <h1 className="text-6xl font-extrabold ">Recetas</h1> 
 
       { hasDrinks ? (
-        <>
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 my-10 gap-10">
           {drinks.drinks.map((drink) => (
             <DrinkCard           //mapea en cada drink que haya usando el drink card
               key={drink.idDrink}     //El id sera el key
               drink={drink}      //pasamos el promp de drink en cada iteracion con el valor drink
             />   
           ))}
-        </>
+        </div>
       ) : (
           <p className="my-10 text-center text-2xl">Realiza una búsqueda para revisar las recetas</p>
       ) }
