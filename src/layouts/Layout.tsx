@@ -1,6 +1,7 @@
 
 import { Outlet } from "react-router-dom"
 import Header from "../components/Header"
+import Modal from "../components/Modal"
 
 export default function Layout() {
   return (
@@ -11,7 +12,7 @@ export default function Layout() {
             <Outlet/> {/* Aqui estara o lo de IndePage o lo de FavoritesPage */}
         </main>
 
-
+        <Modal/>
     </>
   )
 }

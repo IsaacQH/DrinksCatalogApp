@@ -8,10 +8,12 @@ import type { Categories, Drinks, Recipe } from "../types"
 export type RecipesSliceType = {
     categories:Categories,
     drinks:Drinks,
-    selectedRecipe: Recipe
+    selectedRecipe: Recipe,
+    modal: boolean,
     fetchCategories: () => Promise<void>,  //Promesa para obetner el categorias de la API
     searchRecipes: (SearchFilter: SearchFilter) => Promise<void>,  //Promesa para obener recetas, recibe category para buscar
-    selectRecipe: (id: Drink['idDrink']) => Promise<void>
+    selectRecipe: (id: Drink['idDrink']) => Promise<void>,    //Funcion para pasar id de receta y buscar el id en la api para mostar
+    closeModal: () => void  //Funcion para quitar el modal
 }
 
 export const createRecipesSlice : StateCreator<RecipesSliceType> = (set) => ({
@@ -22,6 +24,7 @@ export const createRecipesSlice : StateCreator<RecipesSliceType> = (set) => ({
         drinks: []
     },
     selectedRecipe: {} as Recipe,
+    modal: false,     //Valor inicial del modal de UI headless apagado(es una carta)
     fetchCategories: async()=> {
         const categories = await getCategories()        //Llama a la API desde el servicio en getCategories
         set({
@@ -36,7 +39,15 @@ export const createRecipesSlice : StateCreator<RecipesSliceType> = (set) => ({
     selectRecipe: async(id) => {
         const selectedRecipe = await getRecipeById(id)
         set({
-            selectedRecipe
+            selectedRecipe,
+            modal: true   //Activamos la carta
+        })
+    },
+    closeModal: () => {
+        set({
+            selectedRecipe: {} as Recipe,
+            modal:false
         })
     }
+
 })
