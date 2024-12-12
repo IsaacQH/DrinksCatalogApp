@@ -33,7 +33,7 @@ export const createRecipesSlice : StateCreator<RecipesSliceType> = (set) => ({
     searchRecipes: async(filters) => {  //Funcioni asincrona que llamara a tener las recetas de la api
         const drinks = await getRecipes(filters)
         set({
-            drinks
+            drinks:{drinks}
         })
     },
     selectRecipe: async(id) => {

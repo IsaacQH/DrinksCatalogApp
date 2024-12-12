@@ -12,14 +12,42 @@ export async function getCategories() {
     }    
 }
 
-export async function getRecipes(filters: SearchFilter){
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filters.category}&i=${filters.ingredient}`
-    const {data} =  await axios(url)  // Destructuramos data y obtenemos el array
-    const result = DrinksAPIResponse.safeParse(data)  //Guarda el resultado ya con el tipado
-    if (result.success){
-        return result.data  //Regresa directamenteel resultado de recipe del category
-    }    
+export async function getRecipes(filters: SearchFilter) {
+    // URLs para cada filtro
+    const url1 = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${filters.ingredient}`;
+    const url2 = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filters.category}`;
+
+    try {
+        // Realizar ambas solicitudes en paralelo
+        const [data1, data2] = await Promise.all([axios(url1), axios(url2)]);
+
+        // Validar resultados con Zod
+        const resultIngredient = DrinksAPIResponse.safeParse(data1.data);
+        const resultCat = DrinksAPIResponse.safeParse(data2.data);
+
+        if (resultIngredient.success && resultCat.success) {
+            const ingredientDrinks = resultIngredient.data.drinks;
+            const categoryDrinks = resultCat.data.drinks;
+
+            // Crear un conjunto de IDs de la categoría
+            const categoryIds = new Set(categoryDrinks.map((drink) => drink.idDrink));
+
+            // Filtrar las bebidas del ingrediente que también estén en la categoría
+            const filteredDrinks = ingredientDrinks.filter((drink) =>
+                categoryIds.has(drink.idDrink)
+            );
+
+            return filteredDrinks; // Retornar los resultados filtrados (incluyen idDrink)
+        } else {
+            throw new Error("Validación fallida de los datos de la API.");
+        }
+    } catch (error) {
+        console.error("Error al obtener recetas:", error);
+        return []; // Retornar un array vacío en caso de error
+    }
 }
+
+
 
 export async function getRecipeById(id: Drink['idDrink'] ){
     const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`
